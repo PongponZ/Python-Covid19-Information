@@ -2,7 +2,7 @@ from tkinter import *
 import os
 import requests
 from PIL import ImageTk,Image,ImageDraw,ImageFont
-
+import json 
 #Basic Setup
 osPath = os.path.dirname(__file__) 
 iconPath = osPath + "/assets/icons/virus2.ico"
@@ -16,6 +16,12 @@ root.iconbitmap(iconPath)
 font_path = osPath + "/fonts/Sarabun-Regular.ttf"
 font_type = ImageFont.truetype(font_path, 35)
 
+#Load country list
+f = open("country.txt", "r")
+countryList = []
+for idx,i in enumerate(f.readlines()):
+    countryList.insert(idx,i)
+
 
 #get data from api 
 #Github https://github.com/javieraviles/covidAPI?fbclid=IwAR2rYnlwkO4EcZ5kYKQxzj4QBbY13w1ND1rhv01gomWvpmaL7kcx-MpNVow
@@ -23,11 +29,12 @@ res_global = requests.get("https://coronavirus-19-api.herokuapp.com/all")
 #res_countries = requests.get(" https://coronavirus-19-api.herokuapp.com/countries")
 data_global = res_global.json()
 
+
 #set data to image
+#data_countries = res_countries.json()
 cases = str(data_global['cases'])
 deaths = str(data_global['deaths'])
 recover = str(data_global['recovered'])
-
 
 #load image assets
 #load background RIP
@@ -47,6 +54,12 @@ drawText = ImageDraw.Draw(bg_path).text(xy=(65, 455),
 bg_file = ImageTk.PhotoImage(bg_path) 
 bg = Label(root, image=bg_file)
 
+
+#Dropdown Country 
+clicked = StringVar()
+clicked.set(countryList[34])
+dropdown = OptionMenu(root, clicked, *countryList)
+dropdown.pack()
 bg.pack()
 #mainloop
 root.mainloop()
